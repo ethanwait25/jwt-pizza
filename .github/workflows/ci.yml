@@ -38,7 +38,7 @@ jobs:
         with:
           path: dist/
   deploy:
-    meeds: build
+    needs: build
     permissions:
       pages: write
       id-token: write
