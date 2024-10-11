@@ -199,3 +199,37 @@ test('create franchise functionality with admin', async ({ page }) => {
     await page.getByRole('button', { name: 'Create' }).click();
 });
 
+test('create store functionality with franchisee', async ({ page }) => {
+    await page.route('*/**/api/auth', async (route) => {
+        const loginReq = { 'email': 'a@jwt.com', 'password': 'admin' };
+        const loginRes = { user: { id: 1, name: 'Admin', email: 'a@jwt.com', roles: [{ role: 'admin' }] }, token: 'abcdef' };
+        expect(route.request().method()).toBe('PUT');
+        expect(route.request().postDataJSON()).toMatchObject(loginReq);
+        await route.fulfill({ json: loginRes });
+    });
+
+    await page.route('*/**/api/franchise/1/store', async (route) => {
+        const createStoreReq = { franchiseId: 1, name: "testStore" }
+        const createStoreRes = { id: 1, franchiseId: 1, name: "testStore" };
+        expect(route.request().method()).toBe('POST');
+        expect(route.request().postDataJSON()).toMatchObject(createStoreReq);
+        await route.fulfill({ json: createStoreRes });
+    });
+
+    await page.goto('/');
+
+    // Login as admin
+    await page.getByLabel('Global').click();
+    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByPlaceholder('Email address').click();
+    await page.getByPlaceholder('Email address').fill('a@jwt.com');
+    await page.getByPlaceholder('Email address').press('Tab');
+    await page.getByPlaceholder('Password').fill('admin');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    // Create store
+    await page.goto('/create-store');
+    await expect(page.getByText('Create store')).toBeVisible();
+    await page.getByPlaceholder('store name').fill('testStore');
+    await page.getByRole('button', { name: 'Create' }).click();
+});
