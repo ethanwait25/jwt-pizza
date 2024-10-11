@@ -94,3 +94,60 @@ test('buy pizza with login', async ({ page }) => {
     // Check order
     await expect(page.getByText('0.006 ₿')).toBeVisible();
 });
+
+test('create franchise functionality with admin', async ({ page }) => {
+    await page.route('*/**/api/auth', async (route) => {
+        const loginReq = { 'email': 'a@jwt.com', 'password': 'admin' };
+        const loginRes = { user: { id: 1, name: 'Admin', email: 'a@jwt.com', roles: [{ role: 'admin' }] }, token: 'abcdef' };
+        expect(route.request().method()).toBe('PUT');
+        expect(route.request().postDataJSON()).toMatchObject(loginReq);
+        await route.fulfill({ json: loginRes });
+    });
+
+    await page.route('*/**/api/franchise', async (route) => {
+        switch (route.request().method()) {
+            case 'POST':
+                const createFranchiseReq = {
+                    "stores": [],
+                    "name": "testFranchise",
+                    "admins": [
+                        {
+                            "email": "test@test.com"
+                        }
+                    ]
+                }
+                const createFranchiseRes = {
+                    "name": "testFranchise",
+                    "admins": [{
+                        "email": "a@jwt.com",
+                        "id": 4,
+                        "name": "pizza franchisee"
+                    }],
+                    "id": 1
+                }
+                expect(route.request().method()).toBe('POST');
+                expect(route.request().postDataJSON()).toMatchObject(createFranchiseReq);
+                await route.fulfill({ json: createFranchiseRes });
+                break;
+            case 'GET':
+                break;
+        }
+    });
+
+    await page.goto('/');
+
+    await page.getByLabel('Global').click();
+    await page.getByRole('link', { name: 'Login' }).click();
+    await page.getByPlaceholder('Email address').click();
+    await page.getByPlaceholder('Email address').fill('a@jwt.com');
+    await page.getByPlaceholder('Email address').press('Tab');
+    await page.getByPlaceholder('Password').fill('admin');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    await page.goto('/admin-dashboard');
+    await expect(page.getByText('Keep the dough rolling')).toBeVisible();
+    await page.getByRole('button', { name: 'Add Franchise' }).click();
+    await page.getByPlaceholder('franchise name').fill('testFranchise');
+    await page.getByPlaceholder('franchisee admin email').fill('test@test.com');
+    await page.getByRole('button', { name: 'Create' }).click();
+});

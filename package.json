@@ -10,7 +10,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:coverage": "nyc --reporter=json-summary --reporter=text playwright test"
+    "test:coverage": "nyc --reporter=json-summary --reporter=text playwright test",
+    "localserver": "cd ../jwt-pizza-service/src && node index.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
