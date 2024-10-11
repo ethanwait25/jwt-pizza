@@ -93,6 +93,51 @@ test('buy pizza with login', async ({ page }) => {
 
     // Check order
     await expect(page.getByText('0.006 ₿')).toBeVisible();
+    await page.getByRole('button', { name: 'Verify' }).click();
+    await expect(page.getByRole('heading', { name: 'JWT Pizza -' })).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // Order more takes us back to order page
+    await page.getByRole('button', { name: 'Order more' }).click();
+    await expect(page.getByText('Awesome is a click away')).toBeVisible();
+});
+
+test('register new user and logout', async ({ page }) => {
+    await page.route('*/**/api/auth', async (route) => {
+        switch (route.request().method()) {
+            case 'POST':
+                const registerReq = { name: "TestUser", email: "test@test.com", password: "test123" };
+                const registerRes = { user: { id: 2, name: "TestUser", "email": "test@test.com", "roles": [{ "role": "diner" }] }, "token": "tttttt" };
+                expect(route.request().method()).toBe('POST');
+                expect(route.request().postDataJSON()).toMatchObject(registerReq);
+                await route.fulfill({ json: registerRes });
+                break;
+            case 'DELETE':
+                await route.fulfill({ json: { message: "logout successful" } });
+                break;
+        }
+    });
+
+    await page.goto('/');
+
+    // Register new user
+    await page.getByRole('link', { name: 'Register' }).click();
+    await page.getByPlaceholder('Full name').fill('TestUser');
+    await page.getByPlaceholder('Full name').press('Tab');
+    await page.getByPlaceholder('Email address').fill('test@test.com');
+    await page.getByPlaceholder('Email address').press('Tab');
+    await page.getByPlaceholder('Password').fill('test123');
+    await page.getByRole('button', { name: 'Register' }).click();
+
+    // Navigate to diner dashboard
+    await page.getByRole('link', { exact: true, name: 'T' }).click();
+    await expect(page.getByText('Your pizza kitchen')).toBeVisible();
+    await expect(page.getByText('TestUser')).toBeVisible();
+    await expect(page.getByText('diner', { exact: true })).toBeVisible();
+
+    // Logout and return to home page
+    await page.getByRole('link', { name: 'Logout' }).click();
+    await expect(page.getByText('The web\'s best pizza', { exact: true })).toBeVisible();
 });
 
 test('create franchise functionality with admin', async ({ page }) => {
@@ -136,6 +181,7 @@ test('create franchise functionality with admin', async ({ page }) => {
 
     await page.goto('/');
 
+    // Login as admin
     await page.getByLabel('Global').click();
     await page.getByRole('link', { name: 'Login' }).click();
     await page.getByPlaceholder('Email address').click();
@@ -144,6 +190,7 @@ test('create franchise functionality with admin', async ({ page }) => {
     await page.getByPlaceholder('Password').fill('admin');
     await page.getByRole('button', { name: 'Login' }).click();
 
+    // Create franchise
     await page.goto('/admin-dashboard');
     await expect(page.getByText('Keep the dough rolling')).toBeVisible();
     await page.getByRole('button', { name: 'Add Franchise' }).click();
@@ -151,3 +198,4 @@ test('create franchise functionality with admin', async ({ page }) => {
     await page.getByPlaceholder('franchisee admin email').fill('test@test.com');
     await page.getByRole('button', { name: 'Create' }).click();
 });
+
