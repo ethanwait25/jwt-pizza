@@ -233,3 +233,41 @@ test('create store functionality with franchisee', async ({ page }) => {
     await page.getByPlaceholder('store name').fill('testStore');
     await page.getByRole('button', { name: 'Create' }).click();
 });
+
+test('miscellaneous page navigation', async ({ page }) => {
+    await page.goto('/');
+
+    // Navigate to franchise page
+    await page.getByRole('contentinfo').getByRole('link', { name: 'Franchise' }).click();
+    await expect(page.getByText('So you want a piece of the')).toBeVisible();
+
+    // Navigate to about page
+    await page.getByRole('link', { name: 'About' }).click();
+    await expect(page.getByText('The secret sauce')).toBeVisible();
+    await expect(page.getByRole('main').getByRole('img').first()).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^Brian$/ }).getByRole('img')).toBeVisible();
+
+    // Navigate to history page
+    await page.getByRole('link', { name: 'History' }).click();
+    await expect(page.getByText('Mama Rucci, my my')).toBeVisible();
+    await expect(page.getByRole('main').getByRole('img')).toBeVisible();
+
+    // Navigate back to home page
+    await page.getByRole('link', { name: 'home' }).click();
+    await expect(page.getByText('The web\'s best pizza', { exact: true })).toBeVisible();
+});
+
+test('api docs page', async ({ page }) => {
+    await page.goto('/docs');
+    await expect(page.getByText('JWT Pizza API')).toBeVisible();
+    await expect(page.getByText('[POST] /api/auth')).toBeVisible();
+    const exampleRequest = `curl -X POST localhost:3000/api/auth -d '{"name":"pizza diner", 
+        "email":"d@jwt.com", "password":"diner"}' -H 'Content-Type: application/json'`;
+    await expect(page.getByText(exampleRequest)).toBeVisible();
+});
+
+test('page does not exist', async ({ page }) => {
+    await page.goto('/non-existent-page');
+    await expect(page.getByText('Oops')).toBeVisible();
+    await expect(page.getByText('Please try another page.')).toBeVisible();
+});
