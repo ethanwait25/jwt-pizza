@@ -87,11 +87,9 @@ jobs:
     steps:
       - name: Create Release
         uses: ncipollo/release-action@v1
-        env:
-          version: ${{needs.build.outputs.version}}
         with:
-          tag: v${{ env.version }}
-          name: Version ${{ env.version }}
+          tag: v${{ needs.build.outputs.version }}
+          name: Version ${{ needs.build.outputs.version }}
           body: |
             ## 🚀 Changes
 
