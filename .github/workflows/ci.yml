@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging
-      url: https://pizza.ethanwait.com
+      url: https://stage-pizza.ethanwait.com
     env:
       version: ${{ needs.build.outputs.version }}
     steps:
