@@ -177,4 +177,19 @@ export function scenario_1() {
       }
     )
   })
+
+  sleep(1.2)
+
+  response = http.del('https://pizza-service.ethanwait.com/api/auth', null, {
+    headers: {
+      accept: '*/*',
+      authorization: `Bearer ${vars['token']}`,
+      origin: 'https://pizza.ethanwait.com',
+      priority: 'u=1, i',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+      'Content-Type': 'application/json',
+      'sec-ch-ua-mobile': '?0',
+    },
+  })
 }
