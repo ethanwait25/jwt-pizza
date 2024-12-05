@@ -70,7 +70,7 @@ After receiving a page at {XX:XX UTC}, {ON-CALL ENGINEER} came online at {XX:XX 
 
 This engineer did not have a background in the {AFFECTED SYSTEM} so a second alert was sent at {XX:XX UTC} to {ESCALATIONS ON-CALL ENGINEER} into the who came into the room at {XX:XX UTC}.
 
-# Root cause
+## Root cause
 
 Note the final root cause of the incident, the thing identified that needs to change in order to prevent this class of incident from happening again.
 
@@ -96,7 +96,7 @@ By Increasing the size of the BuildEng EC3 ASG to increase the number of nodes a
 Disabled the Escalator autoscaler to prevent the cluster from aggressively scaling-down
 Reverting the Build Engineering scheduler to the previous version.
 
-# Prevention
+## Prevention
 
 Now that you know the root cause, can you look back and see any other incidents that could have the same root cause? If yes, note what mitigation was attempted in those incidents and ask why this incident occurred again.
 
@@ -104,7 +104,7 @@ Now that you know the root cause, can you look back and see any other incidents 
 
 This same root cause resulted in incidents HOT-13432, HOT-14932 and HOT-19452.
 
-# Action items
+## Action items
 
 Describe the corrective action ordered to prevent this class of incident in the future. Note who is responsible and when they have to complete the work and where that work is being tracked.
 
