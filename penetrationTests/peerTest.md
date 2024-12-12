@@ -59,7 +59,8 @@ Because my assigned partner was not able to finish working on his site, I chose 
 | Target | pizza.byucsstudent.com |
 | Classification | Unsanitized inputs on server |
 | Severity | 2 |
-| Image | 1 |
+| Image | ![free-pizza](https://github.com/user-attachments/assets/2a01b029-ed68-45c9-acc3-4abff3c1ea4c)
+![pay-me](https://github.com/user-attachments/assets/cb78de10-aa49-4220-8279-9752a5c868dc) |
 | Description | Modified the pizza order request prices, paying nothing or paying negative coin |
 | Correction | The site should verify the provided price with that of the menu. It should also consider a separate condition to ensure that pizza prices are never negative. |
 
@@ -69,7 +70,8 @@ Because my assigned partner was not able to finish working on his site, I chose 
 | Target | pizza.byucsstudent.com |
 | Classification | Identification and Authentication Failures |
 | Severity | 2 |
-| Image | 1 |
+| Image | ![admin-1](https://github.com/user-attachments/assets/6b3d5ac9-fb76-4b45-ae9b-aeb2ee8792c6)
+![admin-2](https://github.com/user-attachments/assets/bcc12a87-91a7-48a5-a2b5-376579a05a05) |
 | Description | I was able to entirely overwrite the admin account, effectively removing administrator access. |
 | Correction | The site should verify that an account with an email does not exist before allowing registration. |
 
@@ -79,7 +81,7 @@ Because my assigned partner was not able to finish working on his site, I chose 
 | Target | pizza.byucsstudent.com |
 | Classification | Security Misconfiguration |
 | Severity | 3 |
-| Image | 1 |
+| Image | ![common-user](https://github.com/user-attachments/assets/37ed3097-b59e-4398-920f-575511987c2f) |
 | Description | Passwords are too easy to guess. I was able to enter the default diner account because the password was the same as the email. I guess dinner is on the Default Diner tonight. |
 | Correction | The site should require specific features to be included in a password (letters of different cases, numbers, symbols, etc.) in order to make it more difficult to guess (or brute force) a password. |
 
